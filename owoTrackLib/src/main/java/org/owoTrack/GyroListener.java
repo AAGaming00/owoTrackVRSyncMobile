@@ -35,6 +35,7 @@ public class GyroListener implements SensorEventListener {
 
     private void set_sensor_type(boolean geomagnetic){
         sensor_type = use_geomagnetic ? "Magnetometer, Gyroscope, Accelerometer": "Gyroscope, Accelerometer (no magnetometer)";
+//        ROTATION_SENSOR_TYPE = use_geomagnetic ? Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR : Sensor.TYPE_GAME_ROTATION_VECTOR;
         ROTATION_SENSOR_TYPE = use_geomagnetic ? Sensor.TYPE_ROTATION_VECTOR : Sensor.TYPE_GAME_ROTATION_VECTOR;
         using_geomagnetic = geomagnetic;
     }
@@ -50,6 +51,10 @@ public class GyroListener implements SensorEventListener {
         magnetometerAccuracy = -1;
 
         RotationSensor = sensorManager.getDefaultSensor(ROTATION_SENSOR_TYPE);
+        if (RotationSensor == null && ROTATION_SENSOR_TYPE == Sensor.TYPE_ROTATION_VECTOR) {
+            logger.update("aa: applying moto sensor workaround");
+            RotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR);
+        }
         if(RotationSensor == null){
             logger.update("Could not find " + sensor_type + ", falling back to alternative.");
             set_sensor_type(!use_geomagnetic);

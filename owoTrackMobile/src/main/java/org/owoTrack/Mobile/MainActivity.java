@@ -43,7 +43,11 @@ public class MainActivity extends AppCompatActivity {
         sensor_exist = new boolean[4];
 
         sensor_exist[0] = (man.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null);
-        sensor_exist[1] = (man.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            sensor_exist[1] = (man.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null) || (man.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null);
+        } else {
+            sensor_exist[1] = (man.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             sensor_exist[2] = (man.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null);
